@@ -1,5 +1,7 @@
-from Bio import SeqIO
-import pandas as pd
+from Bio import SeqIO # to read the .fasta file
+import pandas as pd # to process dataframes
+import re # to perform regex searches 
+from collections import Counter # to count amino acids in the proteome
 
 print("""
 Part 1: Probability Analysis
@@ -59,14 +61,13 @@ posterior_probability = (P_pattern_given_phosphorylated_by_Cmk2 * P_phosphorylat
 # Print the result
 print(f"The posterior probability that Yfp1 is phosphorylated by Cmk2, given that it matches the pattern, is: {posterior_probability:.4f}")
 
-
 print("""
 Part 2: Probability Analysis
 """)
 print("===== Section 1 =====")
 
 # Specifying the location of the fasta file
-fasta_file = "/Users/marlenfaf/Desktop/UofT - PhD/MMG1344H/orf_trans.fasta"
+fasta_file = "/Users/marlenfaf/Desktop/UofT - PhD/MMG1344H/Foundational-Computational-Biology-Course/orf_trans.fasta"
 
 # Initializing a list to hold the data
 data = []
@@ -77,13 +78,73 @@ with open(fasta_file, "r") as handle:
         # Append the sequence ID and sequence to the data list
         data.append([record.id, str(record.seq)])
 
-# Storing the data in a pandas dataframe 
-df = pd.DataFrame(data, columns=["ID", "Sequence"])
+# Storing the data list that was created above in a pandas dataframe 
+fasta_file = pd.DataFrame(data, columns=["ID", "Sequence"])
 
 print("This is a preview of the .fasta file")
-print(df.head(5))
+print(fasta_file.head(5))
+
+# Defining the pattern we wish to look for 
+print("The pattern we are searching for is:")
+pattern = r'R.{2}[ST].{1}[ST]'
+print(pattern)
+
+print("A function to find the pattern in each sequence in the fasta file is defined")
+# Defining a function that will search for the pattern
+def contains_pattern(sequence):
+    """ Returns the number of times the specified pattern appears in a sequence 
+
+    Args:
+        sequence
+    """
+    return len(re.findall(pattern, sequence))
+
+print("""The function is applied to read the 'Sequence' column in the .fasta file and note the 
+number of matches in the 'Match_count' column""")
+
+fasta_file["Match_Count"] = fasta_file["Sequence"].apply(contains_pattern)
+
+print("This is how the dataframe looks like after we count the pattern matches:")
+print(fasta_file.head(5))
+
+# Counting how many matches were found 
+print("Counting how many proteins match the pattern at least once...")
+proteins_with_matches = (fasta_file["Match_Count"] > 0).sum()
+print(f"The total number of proteins with at least one match to the pattern is {proteins_with_matches}")
+
+total_proteins = len(fasta_file)
+print(f"The total number of proteins in the genome is {total_proteins}")
+
+fraction_with_match = proteins_with_matches / total_proteins
+print(f"SECTION 1 - ANSWER: The fraction of proteins that match the pattern is {fraction_with_match:.4f}")
 
 print("===== Section 2 =====")
+amino_acids = "ACDEFGHIKLMNPQRSTVWY"
+print (f"First we define the 20 amino acids in the genome as follows: {amino_acids}")
+
+# Initialize a Counter to hold the amino acid counts
+amino_acid_count = Counter()
+
+print("We use the counter to find how many appearances of each amino acid are there in each protein sequence.")
+# Iteratig over each protein sequence to count the number of amino acids 
+for seq in fasta_file["Sequence"]:
+    amino_acid_count.update(seq)
+
+print("We sum the counts for each amino acid across sequences")
+# Summing the number of amino acids in all sequences to get the count for the entire proteome
+total_amino_acids = sum(amino_acid_count.values())
+print(f"The total appearances of each amino acid are as follows: {total_amino_acids}")
+
+print("We iterate over the string of amino acids to compute the frequency for each one and saving it all in a dictionary")
+# Calculate the frequency of each amino acid
+amino_acid_frequencies = {aa: amino_acid_count[aa] / total_amino_acids for aa in amino_acids}
+
+print("Converting the dictionary into a vector")
+# Convert to a vector (list) for output
+frequency_vector = [(aa, amino_acid_frequencies[aa]) for aa in amino_acids]
+
+print(f"SECTION 2 - ANSWER: The computed amino acid frequencies for the yeast proteome are {frequency_vector}")
+
 print("===== Section 3 =====")
 print("===== Section 4 =====")
 print("===== Section 5 =====")
