@@ -5,9 +5,13 @@ from collections import Counter # to count amino acids in the proteome
 import pdfplumber # to read the pdf file from assignment 1 
 import seaborn as sns # to create and a the matrix as an image
 import matplotlib.pyplot as plt # to create and a the matrix as an image
+from matplotlib.colors import LinearSegmentedColormap, Normalize
+import numpy as np # Used in figure generation
+import matplotlib.colors as colors # Used in figure generation
+
 
 print("""
-Edit the paths to match your file structure here""")
+Edit the paths to match your file structure here: """)
 fasta_path = "/Users/marlenfaf/Desktop/UofT - PhD/MMG1344H/Foundational-Computational-Biology-Course/orf_trans.fasta"
 assignment_pdf_path = "/Users/marlenfaf/Desktop/UofT - PhD/MMG1344H/FCBI_Assignment_1_Instructions_2025-1.pdf"
 
@@ -17,21 +21,17 @@ Part 1: Probability Analysis
 
 print("===== Section 1: Defining Amino Acid Probabilities  =====")
 # Based on frequency data from S. cerevisiae
-
 P_R = 0.06   # Probability of Arginine (R)
 P_S = 0.093  # Probability of Serine (S)
 P_T = 0.05   # Probability of Threonine (T)
 P_ST = P_S + P_T  # Probability of either Serine or Threonine
 
-# Section 2: Compute Probability of One 6-Mer Matching the Pattern
+print("Computing the probability of a 6-mer matching the pattern...")
 P_6mer = P_R * P_ST * P_ST
-
-# Output the result
 print(f"Probability of a random 6-mer matching the pattern: {P_6mer:.6f}")
 
 # The protein of interest is made of 150 amino acids, so we need to find 
 # how many 6-mers are there in the protein 
-
 def calculate_k_mers(sequence_length, k):
     """Calculates and returns the number of k-mers that can exist in a 
     protein sequence of given length."""
@@ -43,10 +43,10 @@ number_of_6mers = calculate_k_mers(150,6)
 
 print(f"The number of 6-mers in the Yfp1 150 residue-long sequence is {number_of_6mers}")
 
-# Calculate the probability of at least one of the 145 6-mers to match the query sequence. 
+print("Calculating the probability of at least one of the 145 6-mers to match the query sequence...")
 P_match_one = P_6mer * 145 
 
-print(f"The probability of at least one of the 145 6-mers matching the query sequence is {P_match_one:.6f}")
+print(f"SECTION 1 - ANSWER: The probability of at least one of the 145 6-mers matching the query sequence is {P_match_one:.6f}")
 
 
 print("===== Section 2: Posterior probability that Yfp1 is phosphorylated by Cmk2  =====")
@@ -67,7 +67,9 @@ P_pattern_given_phosphorylated_by_Cmk2 = 1  # Assuming that all Cmk2 substrates 
 posterior_probability = (P_pattern_given_phosphorylated_by_Cmk2 * P_phosphorylated_by_Cmk2) / P_pattern_Yfp1
 
 # Print the result
-print(f"The posterior probability that Yfp1 is phosphorylated by Cmk2, given that it matches the pattern, is: {posterior_probability:.4f}")
+print(f"SECTION 2 - ANSWER: The posterior probability that Yfp1 is phosphorylated by Cmk2, given that it matches the pattern, is: {posterior_probability:.4f}")
+
+
 
 print("""
 Part 2: Probability Analysis
@@ -130,21 +132,19 @@ print("===== Section 2 =====")
 amino_acids = "ACDEFGHIKLMNPQRSTVWY"
 print (f"First we define the 20 amino acids in the genome as follows: {amino_acids}")
 
-# Initialize a Counter to hold the amino acid counts
+# Initializing a Counter to hold the amino acid counts
 amino_acid_count = Counter()
 
 print("We use the counter to find how many appearances of each amino acid are there in each protein sequence.")
-# Iteratig over each protein sequence to count the number of amino acids 
+# Iterating over each protein sequence to count the number of amino acids 
 for seq in fasta_file["Sequence"]:
     amino_acid_count.update(seq)
 
 print("We sum the counts for each amino acid across sequences")
-# Summing the number of amino acids in all sequences to get the count for the entire proteome
 total_amino_acids = sum(amino_acid_count.values())
 print(f"The total appearances of each amino acid are as follows: {total_amino_acids}")
 
 print("We iterate over the string of amino acids to compute the frequency for each one and saving it all in a dictionary")
-# Calculate the frequency of each amino acid
 amino_acid_frequencies = {aa: amino_acid_count[aa] / total_amino_acids for aa in amino_acids}
 
 print("Converting the dictionary into a vector")
@@ -355,10 +355,10 @@ conditional_frequencies_I = calculate_conditional_frequencies(isoleucine_as_firs
 conditional_frequencies_Q = calculate_conditional_frequencies(glutamine_as_first, di_counts, total_pairs)
 
 # Create a list of dictionaries with amino acid and frequency
-data_I = [{'Preceding AA': 'Isoleucine', 'Following AA': aa, 'Frequency': freq} 
+data_I = [{'Preceding AA': 'I', 'Following AA': aa, 'Frequency': freq} 
           for aa, freq in conditional_frequencies_I.items()]
 
-data_Q = [{'Preceding AA': 'Glutamine', 'Following AA': aa, 'Frequency': freq} 
+data_Q = [{'Preceding AA': 'Q', 'Following AA': aa, 'Frequency': freq} 
           for aa, freq in conditional_frequencies_Q.items()]
 
 # Combine data for both Isoleucine and Glutamine
@@ -370,3 +370,45 @@ section6_conditional_freqs = pd.DataFrame(combined_data)
 print(f"SECTION 6 - ANSWER: The conditional probabilities for amino acids preceded by Isoleusine (I) and Glutamine (Q) are: {section6_conditional_freqs}")
 
 print("===== Section 7 =====")
+
+# Using the frequency vector from step 2
+marginal_freqs = frequency_vector
+conditional_df = section6_conditional_freqs
+
+print("Converting the marginal amino acid frequencies into a pandas dataframe & computing their difference")
+marginal_df = pd.DataFrame(marginal_freqs, columns=['Following AA', 'Frequency'])
+
+print(f"It looks like this: {marginal_df}")
+
+df_merged = pd.merge(conditional_df, marginal_df, how='left', on='Following AA')
+df_merged.columns = ['Preceding_AA', 'Following_AA', 'Conditional_frequency', 'Marginal_frequency']
+
+df_merged['Difference'] = df_merged['Conditional_frequency'] - df_merged['Marginal_frequency']
+print(f"Here's how the combined dataframe looks like: {df_merged}")
+
+
+print("""I will be visualizing the difference column in a figure to identify large and small differences between
+conditional and marginal probabilities
+""")
+
+bounds = np.linspace(-0.03, 0.03, num=7) 
+
+# Initializing the figure
+fig, ax = plt.subplots(figsize=(12, 8))
+
+# adding the amino acid pairs as tick marks for the x axis
+aa_pairs = df_merged['Preceding_AA'] + '-' + df_merged['Following_AA']
+
+# Plotting the dataframe as a heatmap using sns.heatmap
+sns.heatmap(df_merged[['Difference']].T, cmap='RdBu_r', annot=False, cbar=True, linewidths=0.5, 
+            xticklabels=aa_pairs, ax=ax, vmin=bounds[0], vmax=bounds[-1], cbar_kws={"ticks": bounds})
+
+ax.set_title('Color-coded Difference Matrix: Comparison of amino acid pair frequency with overall amino acid frequency')
+ax.set_ylabel('P(conditional) - P(marginal)')
+ax.set_xlabel('Amino Acid Pairs')
+ax.set_xticklabels(aa_pairs, rotation=90)
+
+plt.tight_layout()
+plt.savefig('difference_matrix.png', dpi=300)
+
+print(f"SECTION 7 - ANSWER: A paragraph interpreting the differences can be found in the .docx file of the assignment")
