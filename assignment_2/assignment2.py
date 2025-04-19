@@ -3,14 +3,16 @@ import sys
 from collections import defaultdict
 from Bio import SeqIO
 import pandas as pd
+from io import StringIO
 
 # --- EDIT PATHS ---
 print("""
-Edit the paths to match your file structure here: """) #TODO delete this path if not needed 
-fasta_path = "/Users/marlenfaf/Desktop/UofT_PhD/MMG1344H/Foundational-Computational-Biology-Course/assignment_2/sample_input.fasta"
+Edit the name of your fasta file here: """) 
+fasta_file_name = "test_input.fasta"
 
 print("""
-Part 1: Modifying the Smith-Waterman algorithm for 
+Part 1: Modifying the Smith-Waterman algorithm for RNA-RNA alignment, where the first sequence is at a 3'->5 direction and the 
+second sequence at 5'->3' direction
 """)
 
 print("We have to make the following modifications to the Smith-Waterman algorithm")
@@ -29,6 +31,7 @@ Use the custom scoring scheme:
 print("First, we have to import the fasta file. We do this ensuring that no comments such as (#Test case 1) are included (using fasta-blast):")
 print("Following the assignment instructions, seq2 each case of the fasta file has to be reversed to stimulate a 3' -> 5' strand.")
 
+print("===== Part 1: Defining Functions =====")
 # Defining a custom fasta parser as a function
 
 def parse_fasta_pairs(fasta_path):
@@ -42,20 +45,11 @@ def parse_fasta_pairs(fasta_path):
     # Defining the sequence pairs based on the order the file was read 
     pairs = []
     for i in range(0, len(records), 2):
-        seq1 = str(records[i].seq)
-        seq2 = str(records[i+1].seq)[::-1]  # Reverse for 3′→5′ hybridization
+        seq1 = str(records[i].seq)[::-1]  # Reverse for 3′→5′ hybridization
+        seq2 = str(records[i+1].seq)
         pairs.append((seq1, seq2))
     
     return pairs
-
-pairs = parse_fasta_pairs("test_input.fasta")
-
-print("This is how the fasta sequences are stored in the 'pairs' variable:")
-for idx, (s1, s2) in enumerate(pairs, 1):
-    print(f"Test Case {idx}")
-    print("Seq1 (5'–3') :", s1)
-    print("Seq2 (3'–5') :", s2)
-    print()
 
 print("Defining a function that will return specific scores for different pairs")
 
@@ -132,37 +126,48 @@ but not gaps aligned to each other (in the same column).
 print("""Using the matrix computed with the function above, we define the traceback function which 
 performs the alignment based on the high-scoring subsequences""")
 
-# The traceback function uses the max scores calculated in the matrix as the starting points 
+# The traceback function uses the max scores calculated in the matrix as the starting points
+# All optimal alignments are stored in the alignments list
+# A stack is used because there may be more than 1 optimal path, and we wish to explore all optimal paths 
 
 def traceback_all(seq1, seq2, matrix, starts):
     alignments = []
     for start in starts:
-        stack = [("", "", start[0], start[1], None)]  # (aligned1, aligned2, i, j, prev_move)
+        stack = [("", "", start[0], start[1], None)]  # Initial stack: (aligned1, aligned2, i, j, prev_move)
 
         while stack:
-            a1, a2, i, j, prev_move = stack.pop()
+            a1, a2, i, j, prev_move = stack.pop() # Takes the last thing we added to the stack & unpacks into variables
 
-            if matrix[i][j] == 0:
-                alignments.append((a1[::-1], a2[::-1]))
+            # This line is only executed once we have reached the end of the alignment, so it is mostly skipped 
+            if matrix[i][j] == 0: # if the score of a matrix cell is zero, then we are at the end of a local alignment
+                alignments.append((a1[::-1], a2[::-1])) # The alignments that were read backwards, are reversed and saved
                 continue
 
-            score = matrix[i][j]
+            score = matrix[i][j] 
 
             # Diagonal move: match/mismatch
+            # Checks if we can move across the matrix diagonal to align 
+            # If diag_score == score is true, it means that aligning seq1[i-1] with seq2[j-1] is part of the optimal 
+            # alignment and results in the same score as the current matrix cell. In other words, this is a valid step 
+            # in the traceback process, so the algorithm continues to move diagonally and adds the aligned 
+            # characters to the growing sequence alignments (a1 and a2).
             if i > 0 and j > 0:
                 diag_score = matrix[i-1][j-1] + rna_score(seq1[i-1], seq2[j-1])
                 if diag_score == score:
                     stack.append((a1 + seq1[i-1], a2 + seq2[j-1], i-1, j-1, 'diag'))
 
             # Left move: gap in seq2
-            if j > 0 and prev_move != 'left':  # disallow repeated left if you want no extensions
+            if j > 0:
+            # and prev_move != 'left':  # disallow repeated left if you want no extensions
                 left_score = matrix[i][j-1] - 1
                 if left_score == score:
                     if prev_move != 'up':  # prevent gap vs gap
                         stack.append((a1 + seq1[i-1] if i > 0 else "-", a2 + "-", i, j-1, 'left'))
+                        # the algorithm will allow consecutive gaps in seq2 if the score matches.
 
             # Up move: gap in seq1
-            if i > 0 and prev_move != 'up':
+            if i > 0:
+            # and prev_move != 'up':
                 up_score = matrix[i-1][j] - 1
                 if up_score == score:
                     if prev_move != 'left':  # prevent gap vs gap
@@ -170,16 +175,77 @@ def traceback_all(seq1, seq2, matrix, starts):
 
     return alignments
 
+# This function outputs the alignment in the same format as the sample output file 
+def print_alignment(aln1, aln2, file = None):
+    # reverse both sequences for biological convention: 3' to 5' on top, 5' to 3' on bottom
+    top = aln1[::-1]
+    bottom = aln2[::-1]
+
+    # Match bars
+    match_line = ""
+    for a, b in zip(top, bottom):
+        if (a, b) in [('G', 'C'), ('C', 'G'), ('A', 'U'), ('U', 'A'), ('G', 'U'), ('U', 'G')]:
+            match_line += '|'
+        else:
+            match_line += ' '
+
+    print("3' " + top + " 5'", file=file)
+    print("   " + match_line, file=file)
+    print("5' " + bottom + " 3'\n", file=file)
 
 
+# Function that will save the output of the printing function above in a text file:
+def write_alignment_output(case_id, score, alignments, file):
+    print(f"# Test Case {case_id}", file=file)
+    print(f"Score: {score}\n", file=file)
+    for a1, a2 in alignments:
+        print_alignment(a1, a2, file=file)
+
+print("===== Part 1: Running the Program =====")
+
+pairs = parse_fasta_pairs(fasta_file_name)
+
+print("This is how the fasta sequences are stored in the 'pairs' variable:")
+for idx, (s1, s2) in enumerate(pairs, 1):
+    print(f"Test Case {idx}")
+    print("Seq1 (5'–3') :", s1)
+    print("Seq2 (3'–5') :", s2)
+    print()
+
+print("Iterating through the pairs and saving the sequences as a list for later use")
+seq_pairs = []
+for case_id, (seq1, seq2) in enumerate(pairs, 1):
+    # Store the pair of sequences as a tuple (seq1, seq2)
+    seq_pairs.append((seq1, seq2))
+
+# Iterating through the sequence pairs list created above to run the program 
+with open("output.txt", "w") as out_file:
+    for case_id, (seq1, seq2) in enumerate(seq_pairs, 1):
+        print(f"# Test Case {case_id}")
+        
+        # Running the local alignment function
+        H, max_pos, max_score = local_align_rna(seq1, seq2)  # Passing seq1 and seq2 to the function
+        
+        # Running the traceback function to get the alignments
+        alignments = traceback_all(seq1, seq2, H, max_pos)
+        
+        # Print or process the results (not saving to a file as you requested)
+        print(f"Score: {max_score}")
+        print(" ")
+
+        for a1, a2 in alignments:
+            print_alignment(a1, a2)
+
+        write_alignment_output(case_id, max_score, alignments, file=out_file)
 
 
+# write_output(alignments, score, case_id, output_path)
 
 
+print("""
+Part 2: 
+""")
 
+# print("===== Section 3 =====")
 
-
-
-print("===== Section 3 =====")
-
-print(f"SECTION 2 - ANSWER: The computed amino acid frequencies for the yeast proteome are")
+# print(f"SECTION 2 - ANSWER: The computed amino acid frequencies for the yeast proteome are")
