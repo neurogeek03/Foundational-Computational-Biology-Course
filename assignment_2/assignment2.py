@@ -329,23 +329,98 @@ def compute_allele_frequencies(snp_row):
 populations = ['ASW', 'CEU', 'CHB', 'LWK', 'MKK', 'YRI']
 print(f"We will look for the SNPs in the following populations {populations}")
 
+# TODO UNCOMMENT
 
-# print("===== Part 2: Task 1 - Running the program =====")
+# # print("===== Part 2: Task 1 - Running the program =====")
 
-# Defining the input directory 
-input_dir = 'hapmap3_unzipped'
-hapmap_files = [
-    os.path.join(input_dir, fname)
-    for fname in os.listdir(input_dir)
-    if any(pop in fname for pop in populations)
-]
+# # Defining the input directory 
+# input_dir = 'hapmap3_unzipped'
+# hapmap_files = [
+#     os.path.join(input_dir, fname)
+#     for fname in os.listdir(input_dir)
+#     if any(pop in fname for pop in populations)
+# ]
 
-print("Selected HapMap3 files:")
-for f in hapmap_files:
-    print(" →", os.path.basename(f))
+# print("Selected HapMap3 files:")
+# for f in hapmap_files:
+#     print(" →", os.path.basename(f))
 
 
-# Defining the SNPs of interest and the populations we wish to search for them 
+# # Defining the SNPs of interest and the populations we wish to search for them 
+# snps_of_interest = ['rs683', 'rs910']
+# results = {}
+
+# for pop in populations:
+#     file_path = f'hapmap3_unzipped/{pop}.hmap'
+#     snp_data = extract_snp_info(file_path, snps_of_interest)
+#     print(snp_data)
+#     results[pop] = {}
+
+#     for _, row in snp_data.iterrows():
+#         rsid = row['rs#']
+#         freqs = compute_allele_frequencies(row)
+#         is_fixed = len(freqs) == 1
+#         fixed_allele = list(freqs.keys())[0] if is_fixed else None
+#         results[pop][rsid] = {
+#             'frequencies': freqs,
+#             'is_fixed': is_fixed,
+#             'fixed_allele': fixed_allele
+#         }
+
+# # Displaying the results per population 
+# for pop in results:
+#     print(f'\nPopulation: {pop}')
+#     for snp in snps_of_interest:
+#         data = results[pop].get(snp, {})
+#         if not data:
+#             print(f"  {snp}: Not found")
+#         else:
+#             print(f"  {snp}: Fixed? {data['is_fixed']}, Allele Frequencies: {data['frequencies']}, Fixed Allele: {data['fixed_allele']}")
+
+# # Creating a figure of the output for easier visualization & interpretation
+# records = []
+# for pop in results:
+#     for snp in snps_of_interest:
+#         data = results[pop].get(snp, {})
+#         if data and 'frequencies' in data:
+#             for allele, freq in data['frequencies'].items():
+#                 records.append({
+#                     'Population': pop,
+#                     'SNP': snp,
+#                     'Allele': allele,
+#                     'Frequency': freq
+#                 })
+
+# df = pd.DataFrame(records)
+
+# # Optional: Sort populations consistently
+# df['Population'] = pd.Categorical(df['Population'], categories=['ASW', 'CEU', 'CHB', 'LWK', 'MKK', 'YRI'], ordered=True)
+
+# # Creating the plot using seaborn
+# sns.set(style="whitegrid")
+# g = sns.catplot(
+#     data=df,
+#     x='Population', y='Frequency', hue='Allele',
+#     col='SNP', kind='bar', height=5, aspect=1,
+#     palette='pastel', ci=None
+# )
+# g.set_titles('SNP: {col_name}')
+# g.set_axis_labels('Population', 'Allele Frequency')
+# g.add_legend(title='Allele')
+# plt.tight_layout()
+
+# # Saving the plot in my current working directory
+# plot_path = os.path.join(os.getcwd(), "allele_frequencies_by_population.png")
+# g.savefig(plot_path, dpi=300)
+
+# print(f"Plot saved to: {plot_path}")
+
+print("end of Part 2, Task 1")
+
+print("===== Part 2: Task 2 - Obtaining the allele frequencies for the given subpopulations =====")
+populations = ['ASW', 'CHD', 'GIH', 'LWK', 'MEX', 'MKK', 'TSI']
+print(f"We will look for the SNPs in the following populations {populations}")
+
 snps_of_interest = ['rs683', 'rs910']
 results = {}
 
@@ -376,45 +451,110 @@ for pop in results:
         else:
             print(f"  {snp}: Fixed? {data['is_fixed']}, Allele Frequencies: {data['frequencies']}, Fixed Allele: {data['fixed_allele']}")
 
-# Creating a figure of the output for visualization & interpretation
-records = []
+# Defining a simple heterozygosity function
+def heterozygosity(pA):
+    return 1 - (pA**2 + (1 - pA)**2)
+
+# Looping through the existing results and computing heterozygosity
 for pop in results:
-    for snp in snps_of_interest:
-        data = results[pop].get(snp, {})
-        if data and 'frequencies' in data:
-            for allele, freq in data['frequencies'].items():
-                records.append({
-                    'Population': pop,
-                    'SNP': snp,
-                    'Allele': allele,
-                    'Frequency': freq
-                })
+    for snp in results[pop]:
+        freqs = results[pop][snp]['frequencies']
 
-# Step 2: Create DataFrame
-df = pd.DataFrame(records)
+        if len(freqs) == 2:
+            # Use frequency of 'A' if available, otherwise we pick the first allele available
+            pA = freqs.get('A', list(freqs.values())[0])
+            hs = heterozygosity(pA)
 
-# Optional: Sort populations consistently
-df['Population'] = pd.Categorical(df['Population'], categories=['ASW', 'CEU', 'CHB', 'LWK', 'MKK', 'YRI'], ordered=True)
+        # Store the computed heterozygosity in results
+        results[pop][snp]['heterozygosity'] = hs
 
-# Step 3: Plot with seaborn
-sns.set(style="whitegrid")
-g = sns.catplot(
-    data=df,
-    x='Population', y='Frequency', hue='Allele',
-    col='SNP', kind='bar', height=5, aspect=1,
-    palette='pastel', ci=None
-)
-g.set_titles('SNP: {col_name}')
-g.set_axis_labels('Population', 'Allele Frequency')
-g.add_legend(title='Allele')
-plt.tight_layout()
+# Printing the results as a table: 
+for snp in snps_of_interest:
+    print(f"\n### Results for {snp}\n")
+    print("| Population | Allele Frequencies | Heterozygosity (H_S) |")
+    print("|------------|--------------------|------------------------|")
+    
+    for pop in results:
+        snp_data = results[pop].get(snp)
+        if snp_data:
+            freqs = snp_data['frequencies']
+            hs = snp_data['heterozygosity']
+            freqs_str = ', '.join([f"{allele}: {freq:.4f}" for allele, freq in freqs.items()])
+            print(f"| {pop} | {freqs_str} | {hs:.4f} |")
+        else:
+            print(f"| {pop} | Not found | - |")
 
-# Step 4: Save plot in working directory
-plot_path = os.path.join(os.getcwd(), "allele_frequencies_by_population.png")
-g.savefig(plot_path, dpi=300)
+# Calculating and displaying the mean allele frequencies
 
-print(f"Plot saved to: {plot_path}")
+# Initializing a dictionary that will hold the mean frequencies 
+mean_frequencies_per_snp = {}
 
-print("end of Part 2, Task 1")
+for snp in snps_of_interest:
+    allele_totals = defaultdict(float)
+    allele_counts = defaultdict(int)
 
-# print("===== Part 2: Task 1 - Running the program =====")
+    for pop in results:
+        snp_data = results[pop].get(snp)
+        if snp_data:
+            freqs = snp_data['frequencies']
+            for allele, freq in freqs.items():
+                allele_totals[allele] += freq
+                allele_counts[allele] += 1  # tracking how many populations had this allele
+
+    # Computing mean frequencies 
+    mean_freqs = {
+        allele: allele_totals[allele] / allele_counts[allele]
+        for allele in allele_totals
+    }
+
+    # Saving the frequency values as a dictionary
+    mean_freq_a = mean_freqs.get('A', 0.0)
+    mean_freq_c = mean_freqs.get('C', 0.0)
+
+    # Optionally save to dictionary for later access
+    mean_frequencies_per_snp[snp] = {
+        'A': mean_freq_a,
+        'C': mean_freq_c
+    }
+
+    # Printing the results as a table: 
+    print(f"\n### Mean Allele Frequencies for {snp} (across populations)\n")
+    print("| Allele | Mean Frequency |")
+    print("|--------|----------------|")
+    for allele in sorted(mean_freqs.keys()):
+        print(f"| {allele} | {mean_freqs[allele]:.4f} |")
+
+# Calculating the total heterozygosity and the mean subpopulation-specific heterozygosity:
+for snp in snps_of_interest:
+    pA_mean = mean_frequencies_per_snp[snp].get('A', 0.0)
+    
+    # Calculating H_T
+    ht = heterozygosity(pA_mean)
+
+    # 3. Calculate each population's H_S for the SNP
+    hs_values = []
+    for pop in results:
+        snp_data = results[pop].get(snp)
+        if snp_data:
+            freqs = snp_data['frequencies']
+            if len(freqs) == 2:  # only compute for biallelic SNPs
+                pA = freqs.get('A', list(freqs.values())[0])
+                hs_values.append(heterozygosity(pA))
+            else:
+                hs_values.append(0.0)
+
+    # 4. Compute mean H_S
+    hs_mean = sum(hs_values) / len(hs_values) if hs_values else 0.0
+
+    # 5. Compute F_ST
+    fst = (ht - hs_mean) / ht if ht > 0 else 0.0
+
+    # 6. Print results
+    print(f"\n### Fixation Index Summary for {snp}")
+    print(f"H_T       : {ht:.4f}")
+    print(f"H_S(mean) : {hs_mean:.4f}")
+    print(f"F_ST      : {fst:.4f}")
+
+
+
+print("===== Part 2: Task 2 - Running the program =====")
