@@ -1,14 +1,22 @@
 # Assignment 2 
 import sys
 from collections import defaultdict
+from collections import Counter 
 from Bio import SeqIO
 import pandas as pd
 from io import StringIO
+import zipfile
+import gzip
+import os
+import shutil
+import seaborn as sns 
+import matplotlib.pyplot as plt
 
 # --- EDIT PATHS ---
 print("""
 Edit the name of your fasta file here: """) 
 fasta_file_name = "test_input.fasta"
+hap_map_path = "/Users/marlenfaf/Desktop/UofT_PhD/MMG1344H/Foundational-Computational-Biology-Course/HapMap3.zip"
 
 print("""
 Part 1: Modifying the Smith-Waterman algorithm for RNA-RNA alignment, where the first sequence is at a 3'->5 direction and the 
@@ -113,6 +121,7 @@ def local_align_rna(seq1, seq2):
                 max_pos.append((i, j))
 
     return H, max_pos, max_score
+#TODO INCLUDE SEQUENCE INDEXING INFO
 
 # The matrix H helps identify the best local alignment between two RNA sequences, considering matches, mismatches, 
 # and gaps. The local alignment focuses on finding the highest-scoring subsequences rather than aligning the entire 
@@ -239,13 +248,173 @@ with open("output.txt", "w") as out_file:
         write_alignment_output(case_id, max_score, alignments, file=out_file)
 
 
-# write_output(alignments, score, case_id, output_path)
-
-
 print("""
-Part 2: 
+Part 2: Interpreting SNPs from the HapMap3 dataset
 """)
 
-# print("===== Section 3 =====")
+print("===== Part 2: Task 1 - Unzipping data =====")
 
-# print(f"SECTION 2 - ANSWER: The computed amino acid frequencies for the yeast proteome are")
+# Unzipping and loading the data 
+
+print("Here's a preview of the HapMap3 dataset:")
+
+#TODO uncomment before submission
+
+# #Unzipping the HapMap3.zip file into the disk
+# with zipfile.ZipFile(hap_map_path, 'r') as zip_ref:
+#     zip_ref.extractall('hapmap3_data')
+
+unzipped_files = os.listdir('hapmap3_data')
+print(unzipped_files) # ['__MACOSX', 'HapMap3']
+
+# Unzipping the files contained in the HapMap3 folder of the file we unzipped above 
+input_dir = 'hapmap3_data/HapMap3/'
+output_dir = 'hapmap3_unzipped'
+
+os.makedirs(output_dir, exist_ok=True)
+
+#TODO uncomment before submission
+
+# for filename in os.listdir(input_dir):
+#     if filename.endswith('.hmap.gz'):
+#         input_path = os.path.join(input_dir, filename)
+#         output_filename = filename[:-3]  # Remove '.gz'
+#         output_path = os.path.join(output_dir, output_filename)
+
+#         with gzip.open(input_path, 'rb') as f_in:
+#             with open(output_path, 'wb') as f_out:
+#                 shutil.copyfileobj(f_in, f_out)
+
+#         print(f"Unzipped: {filename} → {output_filename}")
+
+
+print("Previewing one of the .hapmap files:")
+files = [f for f in os.listdir(output_dir) if f.endswith('.hmap')]
+
+#TODO uncomment before submission
+
+# # Pick the first one (just for preview)
+# preview_file = os.path.join(output_dir, files[0])
+# print(f"Previewing: {preview_file}")
+# # Read and display first few rows
+# df = pd.read_csv(preview_file, sep='\t')
+# print(df.head())
+
+print("===== Part 2: Task 1 - Functions =====")
+
+# Defining necessary Functions
+
+# This fucntion allows us to select for the SNPs of interest
+def extract_snp_info(file_path, snps_of_interest):
+    df = pd.read_csv(file_path, delim_whitespace=True, dtype=str, low_memory=False)
+    print("Columns in the file:", df.columns.tolist())
+    df_filtered = df[df['rs#'].isin(snps_of_interest)]
+    return df_filtered
+
+# Function to compute allele frequencies
+def compute_allele_frequencies(snp_row):
+    genotypes = snp_row.iloc[11:]  # skipping the metadata columns
+    allele_counts = Counter()
+
+    for gt in genotypes:
+        if pd.isna(gt) or gt in ['NN', '--']:
+            continue
+        allele_counts[gt[0]] += 1
+        allele_counts[gt[1]] += 1  # since it's diploid
+
+    total = sum(allele_counts.values())
+    frequencies = {allele: round(count / total, 4) for allele, count in allele_counts.items()}
+    return frequencies
+
+populations = ['ASW', 'CEU', 'CHB', 'LWK', 'MKK', 'YRI']
+print(f"We will look for the SNPs in the following populations {populations}")
+
+
+# print("===== Part 2: Task 1 - Running the program =====")
+
+# Defining the input directory 
+input_dir = 'hapmap3_unzipped'
+hapmap_files = [
+    os.path.join(input_dir, fname)
+    for fname in os.listdir(input_dir)
+    if any(pop in fname for pop in populations)
+]
+
+print("Selected HapMap3 files:")
+for f in hapmap_files:
+    print(" →", os.path.basename(f))
+
+
+# Defining the SNPs of interest and the populations we wish to search for them 
+snps_of_interest = ['rs683', 'rs910']
+results = {}
+
+for pop in populations:
+    file_path = f'hapmap3_unzipped/{pop}.hmap'
+    snp_data = extract_snp_info(file_path, snps_of_interest)
+    print(snp_data)
+    results[pop] = {}
+
+    for _, row in snp_data.iterrows():
+        rsid = row['rs#']
+        freqs = compute_allele_frequencies(row)
+        is_fixed = len(freqs) == 1
+        fixed_allele = list(freqs.keys())[0] if is_fixed else None
+        results[pop][rsid] = {
+            'frequencies': freqs,
+            'is_fixed': is_fixed,
+            'fixed_allele': fixed_allele
+        }
+
+# Displaying the results per population 
+for pop in results:
+    print(f'\nPopulation: {pop}')
+    for snp in snps_of_interest:
+        data = results[pop].get(snp, {})
+        if not data:
+            print(f"  {snp}: Not found")
+        else:
+            print(f"  {snp}: Fixed? {data['is_fixed']}, Allele Frequencies: {data['frequencies']}, Fixed Allele: {data['fixed_allele']}")
+
+# Creating a figure of the output for visualization & interpretation
+records = []
+for pop in results:
+    for snp in snps_of_interest:
+        data = results[pop].get(snp, {})
+        if data and 'frequencies' in data:
+            for allele, freq in data['frequencies'].items():
+                records.append({
+                    'Population': pop,
+                    'SNP': snp,
+                    'Allele': allele,
+                    'Frequency': freq
+                })
+
+# Step 2: Create DataFrame
+df = pd.DataFrame(records)
+
+# Optional: Sort populations consistently
+df['Population'] = pd.Categorical(df['Population'], categories=['ASW', 'CEU', 'CHB', 'LWK', 'MKK', 'YRI'], ordered=True)
+
+# Step 3: Plot with seaborn
+sns.set(style="whitegrid")
+g = sns.catplot(
+    data=df,
+    x='Population', y='Frequency', hue='Allele',
+    col='SNP', kind='bar', height=5, aspect=1,
+    palette='pastel', ci=None
+)
+g.set_titles('SNP: {col_name}')
+g.set_axis_labels('Population', 'Allele Frequency')
+g.add_legend(title='Allele')
+plt.tight_layout()
+
+# Step 4: Save plot in working directory
+plot_path = os.path.join(os.getcwd(), "allele_frequencies_by_population.png")
+g.savefig(plot_path, dpi=300)
+
+print(f"Plot saved to: {plot_path}")
+
+print("end of Part 2, Task 1")
+
+# print("===== Part 2: Task 1 - Running the program =====")
