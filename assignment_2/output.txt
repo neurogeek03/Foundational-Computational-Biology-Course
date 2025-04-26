@@ -1,0 +1,536 @@
+# Test Case 1
+Score: 36
+
+3' GGAAAAA-UUUUCCCCC 5'
+   ||||||| |||||||||
+5' UUUUUUUAAAAAGGGGG 3'
+
+3' GGAAAAAU-UUUCCCCC 5'
+   |||||||| ||||||||
+5' UUUUUUUAAAAAGGGGG 3'
+
+3' GGAAAAAUU-UUCCCCC 5'
+   ||||||||| |||||||
+5' UUUUUUUAAAAAGGGGG 3'
+
+3' GGAAAAAUUU-UCCCCC 5'
+   |||||||||| ||||||
+5' UUUUUUUAAAAAGGGGG 3'
+
+3' GGAAAAAUUUU-CCCCC 5'
+   ||||||||||| |||||
+5' UUUUUUUAAAAGGGGGG 3'
+
+3' GGAAAAAUUUUUCCCC 5'
+   ||||||||||||||||
+5' UUUUUUUAAAAGGGGG 3'
+
+# Test Case 2
+Score: 33
+
+3' GGAAAAA--UUUCCCCC 5'
+   |||||||  ||||||||
+5' UUUUUUUAAAAAGGGGG 3'
+
+3' GGAAAAA-U-UUCCCCC 5'
+   ||||||| | |||||||
+5' UUUUUUUAAAAAGGGGG 3'
+
+3' GGAAAAA-UU-UCCCCC 5'
+   ||||||| || ||||||
+5' UUUUUUUAAAAAGGGGG 3'
+
+3' GGAAAAA-UUU-CCCCC 5'
+   ||||||| ||| |||||
+5' UUUUUUUAAAAGGGGGG 3'
+
+3' GGAAAAA-UUUUCCCC 5'
+   ||||||| ||||||||
+5' UUUUUUUAAAAGGGGG 3'
+
+3' GGAAAAAU--UUCCCCC 5'
+   ||||||||  |||||||
+5' UUUUUUUAAAAAGGGGG 3'
+
+3' GGAAAAAU-U-UCCCCC 5'
+   |||||||| | ||||||
+5' UUUUUUUAAAAAGGGGG 3'
+
+3' GGAAAAAU-UU-CCCCC 5'
+   |||||||| || |||||
+5' UUUUUUUAAAAGGGGGG 3'
+
+3' GGAAAAAU-UUUCCCC 5'
+   |||||||| |||||||
+5' UUUUUUUAAAAGGGGG 3'
+
+3' GGAAAAAUU--UCCCCC 5'
+   |||||||||  ||||||
+5' UUUUUUUAAAAAGGGGG 3'
+
+3' GGAAAAAUU-U-CCCCC 5'
+   ||||||||| | |||||
+5' UUUUUUUAAAAGGGGGG 3'
+
+3' GGAAAAAUU-UUCCCC 5'
+   ||||||||| ||||||
+5' UUUUUUUAAAAGGGGG 3'
+
+3' GGAAAAAUUU--CCCCC 5'
+   ||||||||||  |||||
+5' UUUUUUUAAAGGGGGGG 3'
+
+3' GGAAAAAUUU-UCCCC 5'
+   |||||||||| |||||
+5' UUUUUUUAAAGGGGGG 3'
+
+3' GGAAAAAUUUU-CCCC 5'
+   ||||||||||| ||||
+5' UUUUUUUAAAGGGGGG 3'
+
+3' GGAAAAAUUUUUCCC 5'
+   |||||||||||||||
+5' UUUUUUUAAAGGGGG 3'
+
+# Test Case 3
+Score: 36
+
+3' CAAGUG-CGGUUGAAA 5'
+   |||||| |||||||||
+5' GUUCACGGCCAACUUU 3'
+
+# Test Case 4
+Score: 30
+
+3' UGGAGGU-GUUAGGUUUGUAUUA 5'
+   | ||||| | | |||  ||| ||
+5' A-CUUUACC-AACCA-CCGU-GU 3'
+
+3' UGGAGGU-GUUAGGUUUGUAUAA 5'
+   | ||||| | | |||  |||| |
+5' A-CUUUACC-AACCA-CCGUA-U 3'
+
+3' UGGAGGU-GUUAGGUUGGUAUUA 5'
+   | ||||| | | |||  ||| ||
+5' A-CUUUACC-AACCAU-CGU-GU 3'
+
+3' UGGAGGU-GUUAGGUUGGUAUAA 5'
+   | ||||| | | |||  |||| |
+5' A-CUUUACC-AACCAU-CGUA-U 3'
+
+3' UGGAGGU-GUUAGGUUGUUAUUA 5'
+   | ||||| | | ||| | || ||
+5' A-CUUUACC-AACCAUC-GU-GU 3'
+
+3' UGGAGGU-GUUAGGUUGUUAUAA 5'
+   | ||||| | | ||| | ||| |
+5' A-CUUUACC-AACCAUC-GUA-U 3'
+
+3' UGGAGGU-GUAAGGUUUGUAUUA 5'
+   | ||||| ||  |||  ||| ||
+5' A-CUUUACCA-ACCA-CCGU-GU 3'
+
+3' UGGAGGU-GUAAGGUUUGUAUAA 5'
+   | ||||| ||  |||  |||| |
+5' A-CUUUACCA-ACCA-CCGUA-U 3'
+
+3' UGGAGGU-GUAAGGUUGGUAUUA 5'
+   | ||||| ||  |||  ||| ||
+5' A-CUUUACCA-ACCAU-CGU-GU 3'
+
+3' UGGAGGU-GUAAGGUUGGUAUAA 5'
+   | ||||| ||  |||  |||| |
+5' A-CUUUACCA-ACCAU-CGUA-U 3'
+
+3' UGGAGGU-GUAAGGUUGUUAUUA 5'
+   | ||||| ||  ||| | || ||
+5' A-CUUUACCA-ACCAUC-GU-GU 3'
+
+3' UGGAGGU-GUAAGGUUGUUAUAA 5'
+   | ||||| ||  ||| | ||| |
+5' A-CUUUACCA-ACCAUC-GUA-U 3'
+
+3' UGGAGGU-GUAGGGUUUGUAUUA 5'
+   | ||||| ||  |||  ||| ||
+5' A-CUUUACCAA-CCA-CCGU-GU 3'
+
+3' UGGAGGU-GUAGGGUUUGUAUAA 5'
+   | ||||| ||  |||  |||| |
+5' A-CUUUACCAA-CCA-CCGUA-U 3'
+
+3' UGGAGGU-GUAGGGUUGGUAUUA 5'
+   | ||||| ||  |||  ||| ||
+5' A-CUUUACCAA-CCAU-CGU-GU 3'
+
+3' UGGAGGU-GUAGGGUUGGUAUAA 5'
+   | ||||| ||  |||  |||| |
+5' A-CUUUACCAA-CCAU-CGUA-U 3'
+
+3' UGGAGGU-GUAGGGUUGUUAUUA 5'
+   | ||||| ||  ||| | || ||
+5' A-CUUUACCAA-CCAUC-GU-GU 3'
+
+3' UGGAGGU-GUAGGGUUGUUAUAA 5'
+   | ||||| ||  ||| | ||| |
+5' A-CUUUACCAA-CCAUC-GUA-U 3'
+
+3' UGAAGGU-GUUAGGUUUGUAUUA 5'
+   || |||| | | |||  ||| ||
+5' AC-UUUACC-AACCA-CCGU-GU 3'
+
+3' UGAAGGU-GUUAGGUUUGUAUAA 5'
+   || |||| | | |||  |||| |
+5' AC-UUUACC-AACCA-CCGUA-U 3'
+
+3' UGAAGGU-GUUAGGUUGGUAUUA 5'
+   || |||| | | |||  ||| ||
+5' AC-UUUACC-AACCAU-CGU-GU 3'
+
+3' UGAAGGU-GUUAGGUUGGUAUAA 5'
+   || |||| | | |||  |||| |
+5' AC-UUUACC-AACCAU-CGUA-U 3'
+
+3' UGAAGGU-GUUAGGUUGUUAUUA 5'
+   || |||| | | ||| | || ||
+5' AC-UUUACC-AACCAUC-GU-GU 3'
+
+3' UGAAGGU-GUUAGGUUGUUAUAA 5'
+   || |||| | | ||| | ||| |
+5' AC-UUUACC-AACCAUC-GUA-U 3'
+
+3' UGAAGGU-GUAAGGUUUGUAUUA 5'
+   || |||| ||  |||  ||| ||
+5' AC-UUUACCA-ACCA-CCGU-GU 3'
+
+3' UGAAGGU-GUAAGGUUUGUAUAA 5'
+   || |||| ||  |||  |||| |
+5' AC-UUUACCA-ACCA-CCGUA-U 3'
+
+3' UGAAGGU-GUAAGGUUGGUAUUA 5'
+   || |||| ||  |||  ||| ||
+5' AC-UUUACCA-ACCAU-CGU-GU 3'
+
+3' UGAAGGU-GUAAGGUUGGUAUAA 5'
+   || |||| ||  |||  |||| |
+5' AC-UUUACCA-ACCAU-CGUA-U 3'
+
+3' UGAAGGU-GUAAGGUUGUUAUUA 5'
+   || |||| ||  ||| | || ||
+5' AC-UUUACCA-ACCAUC-GU-GU 3'
+
+3' UGAAGGU-GUAAGGUUGUUAUAA 5'
+   || |||| ||  ||| | ||| |
+5' AC-UUUACCA-ACCAUC-GUA-U 3'
+
+3' UGAAGGU-GUAGGGUUUGUAUUA 5'
+   || |||| ||  |||  ||| ||
+5' AC-UUUACCAA-CCA-CCGU-GU 3'
+
+3' UGAAGGU-GUAGGGUUUGUAUAA 5'
+   || |||| ||  |||  |||| |
+5' AC-UUUACCAA-CCA-CCGUA-U 3'
+
+3' UGAAGGU-GUAGGGUUGGUAUUA 5'
+   || |||| ||  |||  ||| ||
+5' AC-UUUACCAA-CCAU-CGU-GU 3'
+
+3' UGAAGGU-GUAGGGUUGGUAUAA 5'
+   || |||| ||  |||  |||| |
+5' AC-UUUACCAA-CCAU-CGUA-U 3'
+
+3' UGAAGGU-GUAGGGUUGUUAUUA 5'
+   || |||| ||  ||| | || ||
+5' AC-UUUACCAA-CCAUC-GU-GU 3'
+
+3' UGAAGGU-GUAGGGUUGUUAUAA 5'
+   || |||| ||  ||| | ||| |
+5' AC-UUUACCAA-CCAUC-GUA-U 3'
+
+3' UGAGGU-GUUAGGUUUGUA-A 5'
+   |||||| | |||| ||| | |
+5' GUUUUACC-AUUC-GACCUUU 3'
+
+3' UGAGGU-GUUAGGUUUGUAUA 5'
+   |||||| | |||| ||| | |
+5' GUUUUACC-AUUC-GACCUUU 3'
+
+3' UGAGGU-GUUAGGUUUGUA-A 5'
+   |||||| | ||||| || | |
+5' GUUUUACC-AUUCA-ACCUUU 3'
+
+3' UGAGGU-GUUAGGUUUGUAUA 5'
+   |||||| | ||||| || | |
+5' GUUUUACC-AUUCA-ACCUUU 3'
+
+3' UGAGGU-GUUAGGUUGGUA-A 5'
+   |||||| | |||||| | | |
+5' GUUUUACC-AUUCAG-CCUUU 3'
+
+3' UGAGGU-GUUAGGUUGGUAUA 5'
+   |||||| | |||||| | | |
+5' GUUUUACC-AUUCAG-CCUUU 3'
+
+3' UGAGGU-GUAAGGUUUGUA-A 5'
+   |||||| || ||| ||| | |
+5' GUUUUACCA-UUC-GACCUUU 3'
+
+3' UGAGGU-GUAAGGUUUGUAUA 5'
+   |||||| || ||| ||| | |
+5' GUUUUACCA-UUC-GACCUUU 3'
+
+3' UGAGGU-GUAAGGUUUGUA-A 5'
+   |||||| || |||| || | |
+5' GUUUUACCA-UUCA-ACCUUU 3'
+
+3' UGAGGU-GUAAGGUUUGUAUA 5'
+   |||||| || |||| || | |
+5' GUUUUACCA-UUCA-ACCUUU 3'
+
+3' UGAGGU-GUAAGGUUGGUA-A 5'
+   |||||| || ||||| | | |
+5' GUUUUACCA-UUCAG-CCUUU 3'
+
+3' UGAGGU-GUAAGGUUGGUAUA 5'
+   |||||| || ||||| | | |
+5' GUUUUACCA-UUCAG-CCUUU 3'
+
+# Test Case 5
+Score: 18
+
+3' GUGAAAUG 5'
+   ||||||||
+5' UACUUUAC 3'
+
+# Test Case 6
+Score: 17
+
+3' AAAGAAUUC 5'
+   ||||||| |
+5' UUUCUUAUG 3'
+
+# Test Case 7
+Score: 31
+
+3' UAUGUUUGGAAAUGAAUGGAAGGU 5'
+   || | ||||  |||  ||| | ||
+5' AUUC-GACC--UAC-AACC-U-CG 3'
+
+3' UAUGUUUGGAAAUGAAUGGAAGUU 5'
+   || | ||||  |||  ||| || |
+5' AUUC-GACC--UAC-AACC-UC-G 3'
+
+3' UAUGUUUGGAAAUGAUUGGAAGGU 5'
+   || | ||||  |||  ||| | ||
+5' AUUC-GACC--UACA-ACC-U-CG 3'
+
+3' UAUGUUUGGAAAUGAUUGGAAGUU 5'
+   || | ||||  |||  ||| || |
+5' AUUC-GACC--UACA-ACC-UC-G 3'
+
+3' UAUGUUUGGAAAUGAUGGGAAGGU 5'
+   || | ||||  ||| | || | ||
+5' AUUC-GACC--UACAA-CC-U-CG 3'
+
+3' UAUGUUUGGAAAUGAUGGGAAGUU 5'
+   || | ||||  ||| | || || |
+5' AUUC-GACC--UACAA-CC-UC-G 3'
+
+3' UAUGUUUGGAAUUGAAUGGAAGGU 5'
+   || | |||| | ||  ||| | ||
+5' AUUC-GACC-U-AC-AACC-U-CG 3'
+
+3' UAUGUUUGGAAUUGAAUGGAAGUU 5'
+   || | |||| | ||  ||| || |
+5' AUUC-GACC-U-AC-AACC-UC-G 3'
+
+3' UAUGUUUGGAAUUGAUUGGAAGGU 5'
+   || | |||| | ||  ||| | ||
+5' AUUC-GACC-U-ACA-ACC-U-CG 3'
+
+3' UAUGUUUGGAAUUGAUUGGAAGUU 5'
+   || | |||| | ||  ||| || |
+5' AUUC-GACC-U-ACA-ACC-UC-G 3'
+
+3' UAUGUUUGGAAUUGAUGGGAAGGU 5'
+   || | |||| | || | || | ||
+5' AUUC-GACC-U-ACAA-CC-U-CG 3'
+
+3' UAUGUUUGGAAUUGAUGGGAAGUU 5'
+   || | |||| | || | || || |
+5' AUUC-GACC-U-ACAA-CC-UC-G 3'
+
+3' UAUGUUUGGAUUUGAAUGGAAGGU 5'
+   || | |||||  ||  ||| | ||
+5' AUUC-GACCU--AC-AACC-U-CG 3'
+
+3' UAUGUUUGGAUUUGAAUGGAAGUU 5'
+   || | |||||  ||  ||| || |
+5' AUUC-GACCU--AC-AACC-UC-G 3'
+
+3' UAUGUUUGGAUUUGAUUGGAAGGU 5'
+   || | |||||  ||  ||| | ||
+5' AUUC-GACCU--ACA-ACC-U-CG 3'
+
+3' UAUGUUUGGAUUUGAUUGGAAGUU 5'
+   || | |||||  ||  ||| || |
+5' AUUC-GACCU--ACA-ACC-UC-G 3'
+
+3' UAUGUUUGGAUUUGAUGGGAAGGU 5'
+   || | |||||  || | || | ||
+5' AUUC-GACCU--ACAA-CC-U-CG 3'
+
+3' UAUGUUUGGAUUUGAUGGGAAGUU 5'
+   || | |||||  || | || || |
+5' AUUC-GACCU--ACAA-CC-UC-G 3'
+
+3' UAUGUUUGGAAAUGAAUGGAAGGU 5'
+   || || |||  |||  ||| | ||
+5' AUUCA-ACC--UAC-AACC-U-CG 3'
+
+3' UAUGUUUGGAAAUGAAUGGAAGUU 5'
+   || || |||  |||  ||| || |
+5' AUUCA-ACC--UAC-AACC-UC-G 3'
+
+3' UAUGUUUGGAAAUGAUUGGAAGGU 5'
+   || || |||  |||  ||| | ||
+5' AUUCA-ACC--UACA-ACC-U-CG 3'
+
+3' UAUGUUUGGAAAUGAUUGGAAGUU 5'
+   || || |||  |||  ||| || |
+5' AUUCA-ACC--UACA-ACC-UC-G 3'
+
+3' UAUGUUUGGAAAUGAUGGGAAGGU 5'
+   || || |||  ||| | || | ||
+5' AUUCA-ACC--UACAA-CC-U-CG 3'
+
+3' UAUGUUUGGAAAUGAUGGGAAGUU 5'
+   || || |||  ||| | || || |
+5' AUUCA-ACC--UACAA-CC-UC-G 3'
+
+3' UAUGUUUGGAAUUGAAUGGAAGGU 5'
+   || || ||| | ||  ||| | ||
+5' AUUCA-ACC-U-AC-AACC-U-CG 3'
+
+3' UAUGUUUGGAAUUGAAUGGAAGUU 5'
+   || || ||| | ||  ||| || |
+5' AUUCA-ACC-U-AC-AACC-UC-G 3'
+
+3' UAUGUUUGGAAUUGAUUGGAAGGU 5'
+   || || ||| | ||  ||| | ||
+5' AUUCA-ACC-U-ACA-ACC-U-CG 3'
+
+3' UAUGUUUGGAAUUGAUUGGAAGUU 5'
+   || || ||| | ||  ||| || |
+5' AUUCA-ACC-U-ACA-ACC-UC-G 3'
+
+3' UAUGUUUGGAAUUGAUGGGAAGGU 5'
+   || || ||| | || | || | ||
+5' AUUCA-ACC-U-ACAA-CC-U-CG 3'
+
+3' UAUGUUUGGAAUUGAUGGGAAGUU 5'
+   || || ||| | || | || || |
+5' AUUCA-ACC-U-ACAA-CC-UC-G 3'
+
+3' UAUGUUUGGAUUUGAAUGGAAGGU 5'
+   || || ||||  ||  ||| | ||
+5' AUUCA-ACCU--AC-AACC-U-CG 3'
+
+3' UAUGUUUGGAUUUGAAUGGAAGUU 5'
+   || || ||||  ||  ||| || |
+5' AUUCA-ACCU--AC-AACC-UC-G 3'
+
+3' UAUGUUUGGAUUUGAUUGGAAGGU 5'
+   || || ||||  ||  ||| | ||
+5' AUUCA-ACCU--ACA-ACC-U-CG 3'
+
+3' UAUGUUUGGAUUUGAUUGGAAGUU 5'
+   || || ||||  ||  ||| || |
+5' AUUCA-ACCU--ACA-ACC-UC-G 3'
+
+3' UAUGUUUGGAUUUGAUGGGAAGGU 5'
+   || || ||||  || | || | ||
+5' AUUCA-ACCU--ACAA-CC-U-CG 3'
+
+3' UAUGUUUGGAUUUGAUGGGAAGUU 5'
+   || || ||||  || | || || |
+5' AUUCA-ACCU--ACAA-CC-UC-G 3'
+
+3' UAUGUUGGGAAAUGAAUGGAAGGU 5'
+   || ||| ||  |||  ||| | ||
+5' AUUCAG-CC--UAC-AACC-U-CG 3'
+
+3' UAUGUUGGGAAAUGAAUGGAAGUU 5'
+   || ||| ||  |||  ||| || |
+5' AUUCAG-CC--UAC-AACC-UC-G 3'
+
+3' UAUGUUGGGAAAUGAUUGGAAGGU 5'
+   || ||| ||  |||  ||| | ||
+5' AUUCAG-CC--UACA-ACC-U-CG 3'
+
+3' UAUGUUGGGAAAUGAUUGGAAGUU 5'
+   || ||| ||  |||  ||| || |
+5' AUUCAG-CC--UACA-ACC-UC-G 3'
+
+3' UAUGUUGGGAAAUGAUGGGAAGGU 5'
+   || ||| ||  ||| | || | ||
+5' AUUCAG-CC--UACAA-CC-U-CG 3'
+
+3' UAUGUUGGGAAAUGAUGGGAAGUU 5'
+   || ||| ||  ||| | || || |
+5' AUUCAG-CC--UACAA-CC-UC-G 3'
+
+3' UAUGUUGGGAAUUGAAUGGAAGGU 5'
+   || ||| || | ||  ||| | ||
+5' AUUCAG-CC-U-AC-AACC-U-CG 3'
+
+3' UAUGUUGGGAAUUGAAUGGAAGUU 5'
+   || ||| || | ||  ||| || |
+5' AUUCAG-CC-U-AC-AACC-UC-G 3'
+
+3' UAUGUUGGGAAUUGAUUGGAAGGU 5'
+   || ||| || | ||  ||| | ||
+5' AUUCAG-CC-U-ACA-ACC-U-CG 3'
+
+3' UAUGUUGGGAAUUGAUUGGAAGUU 5'
+   || ||| || | ||  ||| || |
+5' AUUCAG-CC-U-ACA-ACC-UC-G 3'
+
+3' UAUGUUGGGAAUUGAUGGGAAGGU 5'
+   || ||| || | || | || | ||
+5' AUUCAG-CC-U-ACAA-CC-U-CG 3'
+
+3' UAUGUUGGGAAUUGAUGGGAAGUU 5'
+   || ||| || | || | || || |
+5' AUUCAG-CC-U-ACAA-CC-UC-G 3'
+
+3' UAUGUUGGGAUUUGAAUGGAAGGU 5'
+   || ||| |||  ||  ||| | ||
+5' AUUCAG-CCU--AC-AACC-U-CG 3'
+
+3' UAUGUUGGGAUUUGAAUGGAAGUU 5'
+   || ||| |||  ||  ||| || |
+5' AUUCAG-CCU--AC-AACC-UC-G 3'
+
+3' UAUGUUGGGAUUUGAUUGGAAGGU 5'
+   || ||| |||  ||  ||| | ||
+5' AUUCAG-CCU--ACA-ACC-U-CG 3'
+
+3' UAUGUUGGGAUUUGAUUGGAAGUU 5'
+   || ||| |||  ||  ||| || |
+5' AUUCAG-CCU--ACA-ACC-UC-G 3'
+
+3' UAUGUUGGGAUUUGAUGGGAAGGU 5'
+   || ||| |||  || | || | ||
+5' AUUCAG-CCU--ACAA-CC-U-CG 3'
+
+3' UAUGUUGGGAUUUGAUGGGAAGUU 5'
+   || ||| |||  || | || || |
+5' AUUCAG-CCU--ACAA-CC-UC-G 3'
+
+# Test Case 8
+Score: 19
+
+3' UUGUAAAGUG 5'
+   |||| |||||
+5' GAUGGUUCAC 3'
+
